@@ -1,2 +1,2 @@
 # node-restserver
-Curso Node Rest Server Básico
+Node Rest Server Básico
