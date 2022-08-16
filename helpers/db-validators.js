@@ -15,6 +15,18 @@ const esRolValido = async (rol = '') => {
     }
 }
 
+//verificar si la identificacion existe
+const existeIdentificacion = async (identificacion = '') => {
+    const existeIdentificacion = await Usuario.findOne({
+        identificacion
+    }); //va a buscar en el modelo una identificacion igual al argumento que estoy enviando
+
+    //si encuentra una indentificacion igual a la que estoy pasando quiere decir que ya existe...
+    if (existeIdentificacion) {
+        throw new Error(`La identificacion: ${identificacion} ya existe`);
+    }
+}
+
 //verificar si correo existe
 const existeEmail = async (correo = '') => {
 
@@ -74,6 +86,7 @@ const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
 
 module.exports = {
     esRolValido,
+    existeIdentificacion,
     existeEmail,
     existeUsuarioID,
     existeCategoriaBD,

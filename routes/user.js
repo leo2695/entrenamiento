@@ -15,10 +15,11 @@ const {
 
 
 const {
-    esRolValido, existeEmail, existeUsuarioID
+    esRolValido, existeEmail, existeUsuarioID, existeIdentificacion
 } = require('../helpers/db-validators');
 
 
+//voy a unificar estos archivos en uno solo, ya que vienen del mismo directorio 'middlewares'
 /* const {
     validarCampos
 } = require('../middlewares/validar-campos');
@@ -50,10 +51,11 @@ router.put('/:id',[
 //CREAR
 router.post('/', [
     //arreglo de middlewares
+    check('identificacion').custom(existeIdentificacion),
     check('nombre', 'El campo es obligatorio').not().isEmpty(),
     check('password', 'El password debe tener una longitud mínima de 6').isLength({min: 6}),
     check('correo', 'El correo no es válido').isEmail(),
-    check('fechaNacimiento', 'La fecha no es válida').isDate,
+    //check('fechaNacimiento', 'La fecha de nacimiento no es válida').isDate,
     check('correo').custom(existeEmail),
     //check('rol', 'No es válido').isIn(['SUPER_ROLE','ADMIN_ROLE','USER_ROLE']),
     check('rol').custom(esRolValido),

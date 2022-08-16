@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 //trabaja en callbacks entonces hay que generar una promesa manualmente
-const generarJWT = (uid='') => {
+const generarJWT = (uid='') => { //uid = identificador unico del usuario
 
 
     return new Promise((resolve, reject) => {

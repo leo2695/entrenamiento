@@ -7,7 +7,8 @@ const UsuarioSchema = Schema({
 
     identificacion: {
         type: String,
-        required: [true, 'La identificacion es obligatorio']
+        required: [true, 'La identificacion es obligatorio'],
+        unique: true
     },
 
     nombre: {
@@ -31,7 +32,7 @@ const UsuarioSchema = Schema({
     },
 
     fechaNacimiento: {
-        type: Date,
+        type: String,
         //field: 'fecha_modificacion'
         required: [true, 'La fecha de Nacimiento es requerida']
     },
@@ -65,7 +66,7 @@ UsuarioSchema.methods.toJSON = function () {
         _id,
         ...usuario
     } = this.toObject(); //acá los nombres que ponga especificamente no los veo en las respuestas de postman, solo los que deje en ...usuario se van a mostrar
-    //transformarlo
+    //transformar un nombre de campo por otro nombre
     usuario.uid = _id;
     return usuario;
 }
