@@ -7,57 +7,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--  -->
-    <meta name="google-signin-client_id"
-        content="364351944736-tkjfon8gkqg2sdmi7sdq9lrvc50tohd4.apps.googleusercontent.com">
     <title>Google Sign In</title>
 </head>
 
 <body>
-    <h1>Google Sign In</h1>
+    <h1>Google Sign In Entreno</h1>
     <hr>
 
-    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <div id="g_id_onload" data-client_id="857434475743-qdehndl244mophc3ijp655m2942m4lsv.apps.googleusercontent.com"
+        data-auto_prompt="false" data-callback="handleCredentialResponse">
+    </div>
+    <!-- data-login_uri="https://your.domain/your_login_endpoint" -->
 
-    <a href="#" onclick="signOut();">Sign out</a>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+        data-shape="rectangular" data-logo_alignment="left">
+    </div>
 
+    <button id="google-signout">Signout</button>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-        function signOut() {
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-                console.log('User signed out.');
-            });
-        }
-    </script>
+        function handleCredentialResponse(response) {
 
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script>
+            //Google Token o ID_TOKEN
+            //console.log('id_token', response.credential);
 
-        var url=(window.location.hostname.includes('localhost'))
-        ? 'http://localhost:8080/api/auth/google'
-        : 'https://restserver-leonardo.herokuapp.com/api/auth/google'
+            const id_token = response.credential;
+            var data = {
+                id_token
+            };
+            var url = (window.location.hostname.includes('localhost')) ?
+                'http://localhost:8080/api/auth/google' :
+                'https://entrenamientoleo.herokuapp.com/api/auth/google'
 
-        function onSignIn(googleUser) {
-            var profile = googleUser.getBasicProfile();
-            //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            //console.log('Name: ' + profile.getName());
-            //console.log('Image URL: ' + profile.getImageUrl());
-            //console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
 
-            var id_token = googleUser.getAuthResponse().id_token;
-            //console.log(id_token);
-            const data={ id_token}; //esto es un json, propuedad y valor
-
-            fetch(url,{
+            var myInit = {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
+                headers: myHeaders,
+                mode: 'cors',
+                cache: 'default',
                 body: JSON.stringify(data)
-            })
-            .then(resp=>resp.json())
-            .then(data => console.log('Nuestro server',data))
-            .catch(console.log);
+            };
 
+            var myRequest = new Request(url, myInit);
+
+
+            fetch(myRequest)
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log('Nuestro Server', data)
+                    localStorage.setItem('email', data.usuario.correo)
+                })
+                .catch(console.warn);
+            console.log('id_token', response.credential);
+        }
+
+        const button = document.getElementById('google-signout');
+        button.onclick = () => {
+            //console.log(google.accounts.id);
+
+            google.accounts.id.disableAutoSelect()
+            google.accounts.id.revoke(localStorage.getItem('email'), done => {
+                localStorage.clear();
+                location.reload();
+            })
         }
     </script>
+
 </body>
 
 </html>

@@ -14,6 +14,7 @@ const googleVerify= async(idToken='') => {
     //return payload;
     //const userid = payload['sub'];
     
+    //renombrando las variables
     const {name:nombre,
         picture:imagen,
         email:correo

@@ -8,7 +8,7 @@ const UsuarioSchema = Schema({
     identificacion: {
         type: String,
         required: [true, 'La identificacion es obligatorio'],
-        unique: true
+        //unique: true
     },
 
     nombre: {

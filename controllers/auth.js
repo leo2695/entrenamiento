@@ -1,11 +1,18 @@
-const {response,request} = require("express");
+const {
+    response,
+    request
+} = require("express");
 
 const Usuario = require('../models/usuario');
 
 const bcryptjs = require('bcryptjs');
 
-const {generarJWT} = require("../helpers/generarJWT");
-const {googleVerify} = require("../helpers/google-verify");
+const {
+    generarJWT
+} = require("../helpers/generarJWT");
+const {
+    googleVerify
+} = require("../helpers/google-verify");
 
 
 const loginController = async (req, res = response) => {
@@ -61,9 +68,15 @@ const loginController = async (req, res = response) => {
 }
 
 const googleSignIn = async (req = request, res = response) => {
-    const {id_token} = req.body;
+    const {
+        id_token
+    } = req.body;
 
-    //const googleUser= await googleVerify(id_token);
+    try {
+
+        //res.json({message: 'Todo ok! google sign in'});
+
+            //const googleUser= await googleVerify(id_token);
     const {
         correo,
         nombre,
@@ -76,12 +89,15 @@ const googleSignIn = async (req = request, res = response) => {
 
     if (!usuario) {
         //tengo que crearlo
+        //todo es lo que voy a enviar a la base de datos
         const data = {
+            identificacion: '123456789',
             nombre,
             correo,
-            password:':P',
+            password: ':P',
             imagen,
-            google:true
+            fechaNacimiento: '01/01/2000',
+            google: true
         };
 
         usuario = new Usuario(data);
@@ -91,7 +107,7 @@ const googleSignIn = async (req = request, res = response) => {
     //si el usuario en BD esta inactivo/borrado
     if (!usuario.estado) {
         return res.status(401).json({
-            message:'Usuario bloqueado, hable con el administrador'
+            message: 'Usuario bloqueado, hable con el administrador'
         });
     }
 
@@ -104,9 +120,6 @@ const googleSignIn = async (req = request, res = response) => {
 
 
     //console.log(googleUser);
-    try {
-
-        //res.json({message: 'Todo ok! google sign in'});
 
     } catch (error) {
         console.log(error);
